@@ -1,0 +1,70 @@
+@startuml mea-nexaworks
+title NexaWorks — Entity-Relationship Model (issue tracking)
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+hide circle
+skinparam nodesep 80
+skinparam ranksep 70
+
+
+class Product {
+  + Id : INT <<PK>>
+  {field} + Name : NVARCHAR(100) <<unique>>
+}
+
+class Version {
+  + Id : INT <<PK>>
+  + ProductId : INT <<FK>>
+  {field} + Number : NVARCHAR(10)
+  --
+  unique (ProductId, Number)
+}
+
+class OperatingSystem {
+  + Id : INT <<PK>>
+  {field} + Name : NVARCHAR(50) <<unique>>
+}
+
+class VersionOperatingSystem {
+  + Id : INT <<PK>>
+  + VersionId : INT <<FK>>
+  + OperatingSystemId : INT <<FK>>
+  --
+  unique (VersionId, OperatingSystemId)
+}
+
+class Ticket {
+  + Id : INT <<PK>>
+  + VersionOperatingSystemId : INT <<FK>>
+  + StatusId : INT <<FK>>
+  + CreatedAt : DATE
+  + ResolvedAt : DATE [0..1]
+  {field} + Problem : NVARCHAR(MAX)
+  {field} + Resolution : NVARCHAR(MAX) [0..1]
+}
+
+class Status {
+  + Id : INT <<PK>>
+  {field} + Label : NVARCHAR(20) <<unique>>
+}
+
+Product "1" -- "1..*" Version : has
+Version "1" -- "1..*" VersionOperatingSystem : runs on
+VersionOperatingSystem "0..*" -right- "1" OperatingSystem : supports
+VersionOperatingSystem "1" -- "0..*" Ticket : reported on
+Status "1" -- "0..*" Ticket : qualifies
+
+note bottom of VersionOperatingSystem
+  Join table Version <-> OperatingSystem (many-to-many).
+  One row = one supported combination.
+  A ticket points to an existing Version + OS pair:
+  a ticket on an unsupported combination is impossible
+  (e.g. Trader en Herbe 1.0 on iOS).
+end note
+
+note bottom of Ticket
+  Status "Resolved"    => ResolvedAt and Resolution are filled
+  Status "In progress" => ResolvedAt and Resolution are NULL
+  ResolvedAt >= CreatedAt
+end note
+@enduml
