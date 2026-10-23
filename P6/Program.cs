@@ -18,6 +18,4 @@ using (var scope = app.Services.CreateScope())
     await SeedData.SeedAsync(db);
 }
 
-app.MapGet("/", () => "Hello World!");
-
 app.Run();
