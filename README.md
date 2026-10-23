@@ -50,6 +50,7 @@ Source PlantUML : [`docs/mea-nexaworks.puml`](docs/mea-nexaworks.puml)
 - [.NET SDK 10](https://dotnet.microsoft.com/download)
 - SQL Server (instance par défaut `MSSQLSERVER`) démarré
 - SQL Server Management Studio (SSMS), pour consulter la base
+- LINQPad, pour exécuter les requêtes
 
 ## Lancer le projet
 
@@ -83,6 +84,21 @@ JOIN Status s                   ON s.Id = t.StatusId
 ORDER BY t.Id;
 ```
 
+## Requêtes LINQ (LINQPad)
+
+Les requêtes sont dans [`Queries/TicketSearch.linq`](Queries/TicketSearch.linq), à ouvrir avec
+[LINQPad](https://www.linqpad.net/).
+
+1. Dans LINQPad : **Add connection** → *LINQPad automatic driver* → SQL Server, serveur `localhost`,
+   authentification Windows, *Trust server certificate* coché, base `NexaWorks`.
+2. Ouvrir `Queries/TicketSearch.linq`, sélectionner cette connexion, puis **F5**.
+
+Une seule requête paramétrée, `Search`, couvre toutes les demandes : le statut (en cours ou résolu)
+est obligatoire ; le produit, la version, la période (sur la date de création, bornes incluses) et
+les mots-clés (tous requis, dans la description du problème) ne sont ajoutés que s'ils sont renseignés.
+Chaque appel de `Search` en haut du fichier correspond à une demande et affiche son résultat ;
+l'onglet **SQL** de LINQPad montre l'unique `SELECT` envoyé à SQL Server.
+
 ## Structure du projet
 
 ```
@@ -93,6 +109,7 @@ P6/
 │   └── SeedData.cs           Données de test (produits, versions, compatibilités, tickets)
 ├── Migrations/    Migration InitialCreate générée par EF Core
 └── Program.cs     Application des migrations et du seed au démarrage
+Queries/           Requêtes LINQ (LINQPad)
 docs/              Modèle entité-association (PNG, SVG, source PlantUML)
 ```
 
