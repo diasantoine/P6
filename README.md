@@ -84,6 +84,15 @@ JOIN Status s                   ON s.Id = t.StatusId
 ORDER BY t.Id;
 ```
 
+## Restaurer la base depuis la sauvegarde
+
+Sans lancer le projet, la base complète (structure et données) peut être restaurée à partir de
+[`Database/NexaWorks.bak`](Database/NexaWorks.bak), une sauvegarde complète réalisée avec SSMS :
+
+1. Dans SSMS, clic droit sur **Bases de données** → **Restaurer la base de données…**
+2. Source : **Périphérique** → **…** → **Ajouter** → sélectionner `NexaWorks.bak`.
+3. Vérifier que la base de destination est `NexaWorks`, puis **OK**.
+
 ## Requêtes LINQ (LINQPad)
 
 Les requêtes sont dans [`Queries/TicketSearch.linq`](Queries/TicketSearch.linq), à ouvrir avec
@@ -93,10 +102,11 @@ Les requêtes sont dans [`Queries/TicketSearch.linq`](Queries/TicketSearch.linq)
    authentification Windows, *Trust server certificate* coché, base `NexaWorks`.
 2. Ouvrir `Queries/TicketSearch.linq`, sélectionner cette connexion, puis **F5**.
 
-Une seule requête paramétrée, `Search`, couvre toutes les demandes : le statut (en cours ou résolu)
-est obligatoire ; le produit, la version, la période (sur la date de création, bornes incluses) et
-les mots-clés (tous requis, dans la description du problème) ne sont ajoutés que s'ils sont renseignés.
-Chaque appel de `Search` en haut du fichier correspond à une demande et affiche son résultat ;
+Une seule requête paramétrée, `Search`, couvre les 20 demandes de la liste : le statut (en cours ou
+résolu) est obligatoire ; le produit, la version, la période (bornes incluses : date de création pour
+les problèmes en cours, date de résolution pour les problèmes résolus) et les mots-clés (tous requis,
+dans la description du problème) ne sont ajoutés que s'ils sont renseignés.
+Chacun des 20 appels de `Search` en haut du fichier correspond à une demande et affiche son résultat ;
 l'onglet **SQL** de LINQPad montre l'unique `SELECT` envoyé à SQL Server.
 
 ## Structure du projet
@@ -110,6 +120,7 @@ P6/
 ├── Migrations/    Migration InitialCreate générée par EF Core
 └── Program.cs     Application des migrations et du seed au démarrage
 Queries/           Requêtes LINQ (LINQPad)
+Database/          Sauvegarde complète de la base (NexaWorks.bak)
 docs/              Modèle entité-association (PNG, SVG, source PlantUML)
 ```
 
