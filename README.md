@@ -61,28 +61,8 @@ Source PlantUML : [`docs/mea-nexaworks.puml`](docs/mea-nexaworks.puml)
    ```
 3. Lancer le projet (F5, ou `dotnet run --project P6`).
 
-Au démarrage, le projet :
-1. applique les migrations : la base `NexaWorks` et ses tables sont créées si elles n'existent pas ;
-2. insère les données de test si la base est vide : 4 produits, 12 versions, 6 OS,
-   44 compatibilités et 25 tickets (15 résolus, 10 en cours).
-
-Aucune commande de migration n'est à taper.
-
-## Vérifier les données dans SSMS
-
-Se connecter au serveur `localhost` (authentification Windows), puis exécuter sur la base `NexaWorks` :
-
-```sql
-SELECT t.Id, p.Name AS Produit, v.Number AS Version, os.Name AS OS,
-       s.Label AS Statut, t.CreatedAt, t.ResolvedAt, t.Problem, t.Resolution
-FROM Ticket t
-JOIN VersionOperatingSystem vos ON vos.Id = t.VersionOperatingSystemId
-JOIN Version v                  ON v.Id = vos.VersionId
-JOIN Product p                  ON p.Id = v.ProductId
-JOIN OperatingSystem os         ON os.Id = vos.OperatingSystemId
-JOIN Status s                   ON s.Id = t.StatusId
-ORDER BY t.Id;
-```
+Au démarrage, la base `NexaWorks` est créée si elle n'existe pas, puis les données de test
+(25 tickets) sont insérées si elle est vide. Aucune commande de migration à taper.
 
 ## Restaurer la base depuis la sauvegarde
 
@@ -102,12 +82,9 @@ Les requêtes sont dans [`Queries/TicketSearch.linq`](Queries/TicketSearch.linq)
    authentification Windows, *Trust server certificate* coché, base `NexaWorks`.
 2. Ouvrir `Queries/TicketSearch.linq`, sélectionner cette connexion, puis **F5**.
 
-Une seule requête paramétrée, `Search`, couvre les 20 demandes de la liste : le statut (en cours ou
-résolu) est obligatoire ; le produit, la version, la période (bornes incluses : date de création pour
-les problèmes en cours, date de résolution pour les problèmes résolus) et les mots-clés (tous requis,
-dans la description du problème) ne sont ajoutés que s'ils sont renseignés.
-Chacun des 20 appels de `Search` en haut du fichier correspond à une demande et affiche son résultat ;
-l'onglet **SQL** de LINQPad montre l'unique `SELECT` envoyé à SQL Server.
+Une seule requête paramétrée, `Search`, couvre les 20 demandes de la liste : seuls les critères
+renseignés sont ajoutés. Les 20 appels en tête du fichier correspondent aux 20 demandes, et l'onglet
+**SQL** de LINQPad montre le `SELECT` envoyé à SQL Server.
 
 ## Structure du projet
 
@@ -123,9 +100,3 @@ Queries/           Requêtes LINQ (LINQPad)
 Database/          Sauvegarde complète de la base (NexaWorks.bak)
 docs/              Modèle entité-association (PNG, SVG, source PlantUML)
 ```
-
-## Technologies
-
-- ASP.NET Core 10
-- Entity Framework Core 10 (SQL Server)
-- SQL Server 2025
