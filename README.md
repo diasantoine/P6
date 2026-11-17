@@ -75,16 +75,19 @@ Sans lancer le projet, la base complète (structure et données) peut être rest
 
 ## Requêtes LINQ (LINQPad)
 
-Les requêtes sont dans [`Queries/TicketSearch.linq`](Queries/TicketSearch.linq), à ouvrir avec
+Les requêtes sont dans [`Queries/TicketQueries.linq`](Queries/TicketQueries.linq), à ouvrir avec
 [LINQPad](https://www.linqpad.net/).
 
-1. Dans LINQPad : **Add connection** → *LINQPad automatic driver* → SQL Server, serveur `localhost`,
-   authentification Windows, *Trust server certificate* coché, base `NexaWorks`.
-2. Ouvrir `Queries/TicketSearch.linq`, sélectionner cette connexion, puis **F5**.
+1. Dans LINQPad : **Add Connection…** → garder *LINQ to SQL Enhanced (optimized for SQL Server)* →
+   **Next** → serveur `localhost`, *Windows Authentication*, *Specify new or existing database* :
+   `NexaWorks` → **OK**. Les autres options restent par défaut.
+2. Ouvrir `Queries/TicketQueries.linq`, sélectionner cette connexion, puis **F5**.
 
-Une seule requête paramétrée, `Search`, couvre les 20 demandes de la liste : seuls les critères
-renseignés sont ajoutés. Les 20 appels en tête du fichier correspondent aux 20 demandes, et l'onglet
-**SQL** de LINQPad montre le `SELECT` envoyé à SQL Server.
+Le fichier contient 20 requêtes, une par demande de la liste, numérotées et libellées comme elle.
+Chaque requête est un `Where` autonome : statut, produit, version, période et mots-clés sont écrits
+en clair. Sélectionner un bloc puis **F5** n'exécute que ce bloc, et l'onglet **SQL** de LINQPad
+montre le `SELECT` envoyé à SQL Server. Pour copier un bloc dans un nouveau script : langage
+**C# Statement(s)** et connexion `localhost.NexaWorks` sélectionnés en haut du script.
 
 ## Structure du projet
 
