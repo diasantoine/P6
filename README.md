@@ -50,7 +50,7 @@ Source PlantUML : [`docs/mea-nexaworks.puml`](docs/mea-nexaworks.puml)
 - [.NET SDK 10](https://dotnet.microsoft.com/download)
 - SQL Server (instance par défaut `MSSQLSERVER`) démarré
 - SQL Server Management Studio (SSMS), pour consulter la base
-- LINQPad, pour exécuter les requêtes
+- LINQPad 9 (ou 8), pour exécuter les requêtes
 
 ## Lancer le projet
 
@@ -80,7 +80,8 @@ Les requêtes sont dans [`Queries/TicketQueries.linq`](Queries/TicketQueries.lin
 
 1. Dans LINQPad : **Add Connection…** → garder *LINQ to SQL Enhanced (optimized for SQL Server)* →
    **Next** → serveur `localhost`, *Windows Authentication*, *Specify new or existing database* :
-   `NexaWorks` → **OK**. Les autres options restent par défaut.
+   `NexaWorks` → **OK**. Ne rien changer dans les autres onglets : les valeurs par défaut sont
+   celles attendues, en particulier l'option *DateOnly/TimeOnly* de l'onglet *Options*, cochée.
 2. Ouvrir `Queries/TicketQueries.linq`, sélectionner cette connexion, puis **F5**.
 
 Le fichier contient 20 requêtes, une par demande de la liste, numérotées et libellées comme elle.
